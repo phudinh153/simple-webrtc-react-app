@@ -10,7 +10,10 @@ function CallScreen() {
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
 
-  const socket = socketio("https://signaling-server-flask.herokuapp.com/", {
+  // const socket = socketio("https://signaling-server-flask.herokuapp.com/", {
+  //   autoConnect: false,
+  // });
+  const socket = socketio("http://127.0.0.1:5004", {
     autoConnect: false,
   });
 
