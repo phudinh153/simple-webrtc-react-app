@@ -10,7 +10,10 @@ function CallScreen() {
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
 
-  const socket = socketio("https://signaling-server-flask.herokuapp.com/", {
+  // const socket = socketio("https://signaling-server-flask.herokuapp.com/", {
+  //   autoConnect: false,
+  // });
+  const socket = socketio("http://127.0.0.1:5004", {
     autoConnect: false,
   });
 
@@ -24,24 +27,41 @@ function CallScreen() {
     });
   };
 
+  // const startConnection = () => {
+  //   navigator.mediaDevices
+  //     .getUserMedia({
+  //       audio: false,
+  //       video: {
+  //         height: 350,
+  //         width: 350,
+  //       },
+  //     })
+  //     .then((stream) => {
+  //       console.log("Local Stream found");
+  //       localVideoRef.current.srcObject = stream;
+  //       socket.connect();
+  //       socket.emit("join", { username: localUsername, room: roomName });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Stream not found: ", error);
+  //     });
+  // };
   const startConnection = () => {
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: false,
-        video: {
-          height: 350,
-          width: 350,
-        },
-      })
-      .then((stream) => {
-        console.log("Local Stream found");
-        localVideoRef.current.srcObject = stream;
-        socket.connect();
-        socket.emit("join", { username: localUsername, room: roomName });
-      })
-      .catch((error) => {
-        console.error("Stream not found: ", error);
-      });
+    try {
+      socket.connect();
+      socket.emit("join", { username: localUsername, room: roomName });
+    } catch (error) {
+      console.error("Socket connection failed: ", error);
+    }
+    // Listen for connection errors
+    socket.on('connect_error', (error) => {
+      console.error("Connection error: ", error);
+    });
+
+    // Listen for other errors
+    socket.on('error', (error) => {
+      console.error("An error occurred: ", error);
+    });
   };
 
   const onIceCandidate = (event) => {
