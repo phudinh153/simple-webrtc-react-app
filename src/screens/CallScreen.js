@@ -25,6 +25,7 @@ function CallScreen() {
   };
 
   const startConnection = () => {
+<<<<<<< Updated upstream
     navigator.mediaDevices
       .getUserMedia({
         audio: false,
@@ -42,6 +43,24 @@ function CallScreen() {
       .catch((error) => {
         console.error("Stream not found: ", error);
       });
+=======
+    try {
+      socket.connect();
+      socket.emit("join", { username: localUsername, room: roomName });
+      console.log("Socket connection successful");
+    } catch (error) {
+      console.error("Socket connection failed: ", error);
+    }
+    // Listen for connection errors
+    socket.on('connect_error', (error) => {
+      console.error("Connection error: ", error);
+    });
+
+    // Listen for other errors
+    socket.on('error', (error) => {
+      console.error("An error occurred: ", error);
+    });
+>>>>>>> Stashed changes
   };
 
   const onIceCandidate = (event) => {
